@@ -27,39 +27,43 @@ object DefaultConfigRegistrar : ConfigManagerRegistrar {
         }
     }
 
-    private fun registerCommandLayer(currentContainer: ConfigElementContainer? = null, configManager: ConfigManager, visitor: CommandVisitor, commandDispatcher: CommandDispatcher<ServerCommandSource>) {
+    private fun registerCommandLayer(currentContainer: ConfigElementContainer? = null, parentNode: LiteralCommandNode<ServerCommandSource>? = null, configManager: ConfigManager, visitor: CommandVisitor, commandDispatcher: CommandDispatcher<ServerCommandSource>) {
         val layerElements: Collection<ConfigElement> =  currentContainer?.configElements ?: configManager.configElements
+        val currentParentNode: LiteralCommandNode<ServerCommandSource>? = currentContainer?.run {
+            if (this !is Section) {
+                null
+            } else {
+                CommandManager
+                    .literal(this.name)
+                    .requires { source -> source.hasPermissionLevel(4) }.also { argumentBuilder ->
+                        val sectionComment: String? = this.comment
+                        if (sectionComment != null) {
+                            argumentBuilder.executes { ctx ->
+                                ctx.source.sendMessage(Text.literal("Description: $sectionComment"))
+                                Command.SINGLE_SUCCESS
+                            }
+                        }
+                    }
+                    .build()
+            }
+        }
+        if (parentNode == null && currentParentNode != null) {
+            visitor.configNode.addChild(currentParentNode)
+        } else if (parentNode != null && currentParentNode != null) {
+            parentNode.addChild(currentParentNode)
+        }
         for (element: ConfigElement in layerElements) {
             if (element !is CommandControllable<*, *>) {
                 continue
             }
-            val currentParentNode: LiteralCommandNode<ServerCommandSource>? = currentContainer?.run {
-                if (this !is Section) {
-                    null
-                } else {
-                    CommandManager
-                        .literal(this.name)
-                        .requires { source -> source.hasPermissionLevel(4) }.also { argumentBuilder ->
-                            val sectionComment: String? = this.comment
-                            if (sectionComment != null) {
-                                argumentBuilder.executes { ctx ->
-                                    ctx.source.sendMessage(Text.literal("Description: $sectionComment"))
-                                    Command.SINGLE_SUCCESS
-                                }
-                            }
-                        }
-                        .build().also { parentNode ->
-                            visitor.configNode.addChild(parentNode)
-                        }
-                }
-            }
+
             element.accept(currentParentNode, visitor)
         }
         for (element: ConfigElement in layerElements) {
             if (element !is ConfigElementContainer) {
                 continue
             }
-            registerCommandLayer(element, configManager, visitor, commandDispatcher)
+            registerCommandLayer(element, currentParentNode, configManager, visitor, commandDispatcher)
         }
     }
 
