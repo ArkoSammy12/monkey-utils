@@ -7,7 +7,7 @@ import io.github.arkosammy12.monkeyconfig.settings.BooleanSetting
 import io.github.arkosammy12.monkeyconfig.util.ElementPath
 import net.minecraft.server.command.ServerCommandSource
 
-open class CommandControllableBooleanSetting(
+open class CommandBooleanSetting(
     settingBuilder: BooleanSettingBuilder,
 ) : BooleanSetting(settingBuilder), CommandControllable<Boolean, BoolArgumentType> {
 

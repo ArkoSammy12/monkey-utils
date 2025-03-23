@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.CommandNode
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.github.arkosammy12.monkeyconfig.base.ConfigManager
+import me.lucko.fabric.api.permissions.v0.Permissions
 import net.minecraft.command.CommandRegistryAccess
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
@@ -22,7 +23,7 @@ abstract class AbstractCommandVisitor(
 
     final override val configNode: LiteralCommandNode<ServerCommandSource> = CommandManager
         .literal("config")
-        .requires { source -> source.hasPermissionLevel(4) }
+        .requires(Permissions.require("$rootNodeName.config", 4))
         .build()
 
     override val onConfigReloadedCallback: (CommandContext<ServerCommandSource>, ConfigManager) -> Int
@@ -39,11 +40,10 @@ abstract class AbstractCommandVisitor(
 
         val reloadNode: LiteralCommandNode<ServerCommandSource> = CommandManager
             .literal("reload")
-            .requires { source -> source.hasPermissionLevel(4) }
+            .requires(Permissions.require("$rootNodeName.config.reload", 4))
             .executes { ctx -> onConfigReloadedCallback(ctx, configManager) }
             .build()
 
-        
         // Check if the root node already exists. If it does, use it. Otherwise, create it and add it as a child to the dispatcher root
         val rootNode: CommandNode<ServerCommandSource> = commandDispatcher.root.getChild(rootNodeName) ?: run{
             val node: LiteralCommandNode<ServerCommandSource> = CommandManager

@@ -30,6 +30,7 @@
 		"minecraft": "~1.21.4",
 		"java": ">=21",
 		"fabric-api": "*",
-		"fabric-language-kotlin": "*"
+		"fabric-language-kotlin": "*",
+		"fabric-permissions-api-v0": "0.3.3"
 	}
 }

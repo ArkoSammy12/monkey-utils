@@ -7,7 +7,7 @@ import io.github.arkosammy12.monkeyconfig.settings.StringSetting
 import io.github.arkosammy12.monkeyconfig.util.ElementPath
 import net.minecraft.server.command.ServerCommandSource
 
-open class CommandControllableStringSetting(
+open class CommandStringSetting(
     settingBuilder: StringSettingBuilder
 ) : StringSetting(settingBuilder), CommandControllable<String, StringArgumentType>{
 

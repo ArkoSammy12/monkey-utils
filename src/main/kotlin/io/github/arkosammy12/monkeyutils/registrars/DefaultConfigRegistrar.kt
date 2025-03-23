@@ -29,41 +29,33 @@ object DefaultConfigRegistrar : ConfigManagerRegistrar {
 
     private fun registerCommandLayer(currentContainer: ConfigElementContainer? = null, parentNode: LiteralCommandNode<ServerCommandSource>? = null, configManager: ConfigManager, visitor: CommandVisitor, commandDispatcher: CommandDispatcher<ServerCommandSource>) {
         val layerElements: Collection<ConfigElement> =  currentContainer?.configElements ?: configManager.configElements
-        val currentParentNode: LiteralCommandNode<ServerCommandSource>? = currentContainer?.run {
-            if (this !is Section) {
-                null
-            } else {
-                CommandManager
-                    .literal(this.name)
-                    .requires { source -> source.hasPermissionLevel(4) }.also { argumentBuilder ->
-                        val sectionComment: String? = this.comment
-                        if (sectionComment != null) {
-                            argumentBuilder.executes { ctx ->
-                                ctx.source.sendMessage(Text.literal("Description: $sectionComment"))
-                                Command.SINGLE_SUCCESS
-                            }
-                        }
+        val currentContainerNode: LiteralCommandNode<ServerCommandSource>? = if (currentContainer !is Section) null else CommandManager
+            .literal(currentContainer.name)
+            .requires { source -> source.hasPermissionLevel(4) }
+            .also { argumentBuilder ->
+                currentContainer.comment?.let { comment ->
+                    argumentBuilder.executes { ctx ->
+                        ctx.source.sendMessage(Text.literal("Description: $comment"))
+                        Command.SINGLE_SUCCESS
                     }
-                    .build()
+                }
             }
-        }
-        if (parentNode == null && currentParentNode != null) {
-            visitor.configNode.addChild(currentParentNode)
-        } else if (parentNode != null && currentParentNode != null) {
-            parentNode.addChild(currentParentNode)
+            .build()
+        when {
+            currentContainerNode != null && parentNode == null -> visitor.configNode.addChild(currentContainerNode)
+            currentContainerNode != null && parentNode != null -> parentNode.addChild(currentContainerNode)
         }
         for (element: ConfigElement in layerElements) {
             if (element !is CommandControllable<*, *>) {
                 continue
             }
-
-            element.accept(currentParentNode, visitor)
+            element.accept(currentContainerNode, visitor)
         }
         for (element: ConfigElement in layerElements) {
             if (element !is ConfigElementContainer) {
                 continue
             }
-            registerCommandLayer(element, currentParentNode, configManager, visitor, commandDispatcher)
+            registerCommandLayer(element, currentContainerNode, configManager, visitor, commandDispatcher)
         }
     }
 

@@ -35,7 +35,7 @@ interface CommandControllable<out V : Any, A : ArgumentType<*>> {
                 }
                 val newValue: V = this.getArgumentValue(ctx, this.commandPath.asList.last())
                 setting.value.raw = newValue
-                ctx.source.sendMessage(Text.literal("${this.commandPath.asList.last()} has been set to : ${setting.value}"))
+                ctx.source.sendMessage(Text.literal("${this.commandPath.asList.last()} has been set to : ${setting.value.raw}"))
                 return@get Command.SINGLE_SUCCESS
             } catch (e: Exception) {
                 ctx.source.sendMessage(Text.literal("Error attempting to set value for ${this.commandPath.asList.last()}: ${e.message}"))

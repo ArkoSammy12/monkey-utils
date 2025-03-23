@@ -12,7 +12,7 @@ import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.util.StringIdentifiable
 import java.util.concurrent.CompletableFuture
 
-open class CommandControllableEnumSetting<E>(
+open class CommandEnumSetting<E>(
     settingBuilder: EnumSettingBuilder<E>
 ) : EnumSetting<E>(settingBuilder), CommandControllable<E, StringArgumentType> where E : Enum<E>, E : StringIdentifiable {
 

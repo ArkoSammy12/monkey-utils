@@ -13,7 +13,7 @@ import net.minecraft.server.command.ServerCommandSource
 import kotlin.math.max
 import kotlin.math.min
 
-open class CommandControllableNumberSetting<T : Number> (
+open class CommandNumberSetting<T : Number> (
     settingBuilder: NumberSettingBuilder<T>
 ) : NumberSetting<T>(settingBuilder), CommandControllable<T, ArgumentType<T>> {
 
