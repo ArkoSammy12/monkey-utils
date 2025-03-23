@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "io.github.arkosammy12.monkeyutils.mixin",
+	"package": "io.github.arkosammy12.monkeyutilstest.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 

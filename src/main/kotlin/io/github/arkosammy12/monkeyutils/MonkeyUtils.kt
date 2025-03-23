@@ -1,15 +1,23 @@
 package io.github.arkosammy12.monkeyutils
 
+import io.github.arkosammy12.monkeyutils.registrars.DefaultConfigRegistrar
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import org.slf4j.LoggerFactory
 
 object MonkeyUtils : ModInitializer {
-    private val logger = LoggerFactory.getLogger("monkey-utils")
+
+    private val LOGGER = LoggerFactory.getLogger("monkey-utils")
 
 	override fun onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
-		logger.info("Hello Fabric world!")
+
+		ServerLifecycleEvents.SERVER_STOPPING.register {
+
+			DefaultConfigRegistrar.saveConfigManagers()
+
+		}
+
+		LOGGER.info("Thanks to isXander (https://github.com/isXander) for helping me get into Kotlin from Java :D")
+
 	}
 }

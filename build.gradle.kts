@@ -24,7 +24,20 @@ repositories {
     repositories {
         // Patbox's SGui
         maven("https://maven.nucleoid.xyz")
+
+		maven {
+			name = "enjaraiMavenReleases"
+			url = uri("https://maven.enjarai.dev/releases")
+		}
+
+		maven {
+			name = "modrinth"
+			url = uri("https://api.modrinth.com/maven")
+		}
+
     }
+
+
 
 }
 
@@ -68,8 +81,10 @@ dependencies {
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}")
 	modImplementation("net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin_version")}")
 
+	implementation("io.github.arkosammy12:monkey-config:${property("monkey-config")}")
+
 	// Fabric Permissions API
-	//include(modImplementation("me.lucko:fabric-permissions-api:${property("fabric_permissions_api_version")}")!!)
+	include(modImplementation("me.lucko:fabric-permissions-api:${property("fabric-permissions-api")}")!!)
 
 	"testmodImplementation"(sourceSets.main.get().output)
 	"testmodImplementation"("org.junit.jupiter:junit-jupiter-api:5.8.2")
