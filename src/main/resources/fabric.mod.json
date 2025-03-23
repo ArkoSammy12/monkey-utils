@@ -3,7 +3,7 @@
 	"id": "monkey-utils",
 	"version": "${version}",
 	"name": "Monkey Utils",
-	"description": "A utility libraryh for my Minecraft mods.",
+	"description": "A declarative Kotlin focused Minecraft utility library for commonly used features of my mods.",
 	"authors": [
 		"ArkoSammy12"
 	],
