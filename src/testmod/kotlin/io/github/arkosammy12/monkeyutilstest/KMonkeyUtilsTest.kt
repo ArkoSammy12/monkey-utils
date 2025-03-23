@@ -3,8 +3,10 @@ package io.github.arkosammy12.monkeyutilstest
 import io.github.arkosammy12.monkeyconfig.builders.tomlConfigManager
 import io.github.arkosammy12.monkeyutils.registrars.DefaultConfigRegistrar
 import io.github.arkosammy12.monkeyutils.settings.CommandBooleanSetting
+import io.github.arkosammy12.monkeyutils.settings.CommandEnumSetting
 import io.github.arkosammy12.monkeyutils.settings.CommandNumberSetting
 import io.github.arkosammy12.monkeyutils.settings.CommandStringSetting
+import io.github.arkosammy12.monkeyutilstest.testsettings.EmotionEnum
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.loader.api.FabricLoader
 import org.slf4j.LoggerFactory
@@ -28,6 +30,12 @@ object KMonkeyUtilsTest : ModInitializer {
                 minValue = 0
                 maxValue = 10
                 implementation = ::CommandNumberSetting
+            }
+            section("feelings") {
+                enumSetting("emotions", EmotionEnum.HAPPY) {
+                    comment = "My current emotion"
+                    implementation = ::CommandEnumSetting
+                }
             }
             section("whitelist") {
                 stringSetting("prompt", "You need to be whitelisted!") {
