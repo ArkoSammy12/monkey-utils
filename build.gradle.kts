@@ -81,7 +81,7 @@ dependencies {
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}")
 	modImplementation("net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin_version")}")
 
-	implementation("io.github.arkosammy12:monkey-config:${property("monkey-config")}")
+	include(implementation("io.github.arkosammy12:monkey-config:${property("monkey-config")}")!!)
 
 	// Fabric Permissions API
 	include(modImplementation("me.lucko:fabric-permissions-api:${property("fabric-permissions-api")}")!!)
