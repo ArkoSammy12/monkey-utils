@@ -41,15 +41,19 @@ object DefaultConfigRegistrar : ConfigManagerRegistrar {
                 }
             }
             .build()
-        when {
-            currentContainerNode != null && parentNode == null -> visitor.configNode.addChild(currentContainerNode)
-            currentContainerNode != null && parentNode != null -> parentNode.addChild(currentContainerNode)
-        }
+        var sectionContainsCommandSetting = false
         for (element: ConfigElement in layerElements) {
             if (element !is CommandControllable<*, *>) {
                 continue
             }
+            sectionContainsCommandSetting = true
             element.accept(currentContainerNode, visitor)
+        }
+        if (sectionContainsCommandSetting) {
+            when {
+                currentContainerNode != null && parentNode == null -> visitor.configNode.addChild(currentContainerNode)
+                currentContainerNode != null && parentNode != null -> parentNode.addChild(currentContainerNode)
+            }
         }
         for (element: ConfigElement in layerElements) {
             if (element !is ConfigElementContainer) {
