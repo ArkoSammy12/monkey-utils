@@ -89,6 +89,14 @@ dependencies {
 	"testmodImplementation"(sourceSets.main.get().output)
 	"testmodImplementation"("org.junit.jupiter:junit-jupiter-api:5.8.2")
 	"testmodRuntimeOnly"("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+
+	// NightConfig stuff
+	include(implementation("com.electronwill.night-config:core:${property("night_config_version")}")!!)
+	include(implementation("com.electronwill.night-config:toml:${property("night_config_version")}")!!)
+	include(implementation("com.electronwill.night-config:json:${property("night_config_version")}")!!)
+	include(implementation("com.electronwill.night-config:yaml:${property("night_config_version")}")!!)
+	include(implementation("com.electronwill.night-config:hocon:${property("night_config_version")}")!!)
+	include(implementation("org.slf4j:slf4j-api:${property("slf4j_version")}")!!)
 }
 
 tasks.processResources {
