@@ -2,9 +2,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("fabric-loom") version "1.10-SNAPSHOT"
+	id("fabric-loom") version "1.14-SNAPSHOT"
 	id("maven-publish")
-	id("org.jetbrains.kotlin.jvm") version "2.1.20"
+	id("org.jetbrains.kotlin.jvm") version "2.3.0"
 }
 
 version = property("mod_version").toString()

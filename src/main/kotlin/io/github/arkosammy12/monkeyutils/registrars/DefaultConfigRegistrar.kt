@@ -11,6 +11,7 @@ import io.github.arkosammy12.monkeyutils.commands.CommandVisitor
 import io.github.arkosammy12.monkeyutils.commands.DefaultCommandVisitor
 import io.github.arkosammy12.monkeyutils.settings.CommandControllable
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
+import net.minecraft.command.DefaultPermissions
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.Text
@@ -31,7 +32,7 @@ object DefaultConfigRegistrar : ConfigManagerRegistrar {
         val layerElements: Collection<ConfigElement> =  currentContainer?.configElements ?: configManager.configElements
         val currentContainerNode: LiteralCommandNode<ServerCommandSource>? = if (currentContainer !is Section) null else CommandManager
             .literal(currentContainer.name)
-            .requires { source -> source.hasPermissionLevel(4) }
+            .requires { source -> source.permissions.hasPermission(DefaultPermissions.ADMINS) }
             .also { argumentBuilder ->
                 currentContainer.comment?.let { comment ->
                     argumentBuilder.executes { ctx ->

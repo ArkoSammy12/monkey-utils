@@ -8,6 +8,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode
 import io.github.arkosammy12.monkeyconfig.base.ConfigManager
 import me.lucko.fabric.api.permissions.v0.Permissions
 import net.minecraft.command.CommandRegistryAccess
+import net.minecraft.command.DefaultPermissions
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.Text
@@ -48,7 +49,7 @@ abstract class AbstractCommandVisitor(
         val rootNode: CommandNode<ServerCommandSource> = commandDispatcher.root.getChild(rootNodeName) ?: run{
             val node: LiteralCommandNode<ServerCommandSource> = CommandManager
                 .literal(rootNodeName)
-                .requires { source -> source.hasPermissionLevel(4) }
+                .requires { source -> source.permissions.hasPermission(DefaultPermissions.ADMINS) }
                 .build()
             commandDispatcher.root.addChild(node)
             node
