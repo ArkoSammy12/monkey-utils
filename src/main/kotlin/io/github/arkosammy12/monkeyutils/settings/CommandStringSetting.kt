@@ -5,7 +5,7 @@ import com.mojang.brigadier.context.CommandContext
 import io.github.arkosammy12.monkeyconfig.builders.StringSettingBuilder
 import io.github.arkosammy12.monkeyconfig.settings.StringSetting
 import io.github.arkosammy12.monkeyconfig.util.ElementPath
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
 
 open class CommandStringSetting(
     settingBuilder: StringSettingBuilder
@@ -17,7 +17,7 @@ open class CommandStringSetting(
     override val commandPath: ElementPath
         get() = this.path
 
-    override fun getArgumentValue(ctx: CommandContext<out ServerCommandSource>, argumentName: String): String {
+    override fun getArgumentValue(ctx: CommandContext<out CommandSourceStack>, argumentName: String): String {
         return StringArgumentType.getString(ctx, argumentName)
     }
 
