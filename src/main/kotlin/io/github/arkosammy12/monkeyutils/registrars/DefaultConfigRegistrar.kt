@@ -11,10 +11,10 @@ import io.github.arkosammy12.monkeyutils.commands.CommandVisitor
 import io.github.arkosammy12.monkeyutils.commands.DefaultCommandVisitor
 import io.github.arkosammy12.monkeyutils.settings.CommandControllable
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
-import net.minecraft.command.DefaultPermissions
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.text.Text
+import net.minecraft.server.permissions.Permissions
+import net.minecraft.commands.Commands
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.network.chat.Component
 
 object DefaultConfigRegistrar : ConfigManagerRegistrar {
 
@@ -28,15 +28,15 @@ object DefaultConfigRegistrar : ConfigManagerRegistrar {
         }
     }
 
-    private fun registerCommandLayer(currentContainer: ConfigElementContainer? = null, parentNode: LiteralCommandNode<ServerCommandSource>? = null, configManager: ConfigManager, visitor: CommandVisitor, commandDispatcher: CommandDispatcher<ServerCommandSource>) {
+    private fun registerCommandLayer(currentContainer: ConfigElementContainer? = null, parentNode: LiteralCommandNode<CommandSourceStack>? = null, configManager: ConfigManager, visitor: CommandVisitor, commandDispatcher: CommandDispatcher<CommandSourceStack>) {
         val layerElements: Collection<ConfigElement> =  currentContainer?.configElements ?: configManager.configElements
-        val currentContainerNode: LiteralCommandNode<ServerCommandSource>? = if (currentContainer !is Section) null else CommandManager
+        val currentContainerNode: LiteralCommandNode<CommandSourceStack>? = if (currentContainer !is Section) null else Commands
             .literal(currentContainer.name)
-            .requires { source -> source.permissions.hasPermission(DefaultPermissions.ADMINS) }
+            .requires { source -> source.permissions().hasPermission(Permissions.COMMANDS_ADMIN) }
             .also { argumentBuilder ->
                 currentContainer.comment?.let { comment ->
                     argumentBuilder.executes { ctx ->
-                        ctx.source.sendMessage(Text.literal("Description: $comment"))
+                        ctx.source.sendSystemMessage(Component.literal("Description: $comment"))
                         Command.SINGLE_SUCCESS
                     }
                 }
