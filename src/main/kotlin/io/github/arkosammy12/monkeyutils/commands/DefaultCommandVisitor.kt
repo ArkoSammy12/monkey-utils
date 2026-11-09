@@ -7,30 +7,31 @@ import com.mojang.brigadier.tree.LiteralCommandNode
 import io.github.arkosammy12.monkeyconfig.base.ConfigManager
 import io.github.arkosammy12.monkeyutils.settings.CommandControllable
 import me.lucko.fabric.api.permissions.v0.Permissions
-import net.minecraft.command.CommandRegistryAccess
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.server.permissions.PermissionLevel
+import net.minecraft.commands.CommandBuildContext
+import net.minecraft.commands.Commands
+import net.minecraft.commands.CommandSourceStack
 
 class DefaultCommandVisitor(
     configManager: ConfigManager,
     rootNodeName: String = configManager.fileName,
-    commandDispatcher: CommandDispatcher<ServerCommandSource>,
-    commandRegistryAccess: CommandRegistryAccess? = null,
-    registrationEnvironment: CommandManager.RegistrationEnvironment? = null
+    commandDispatcher: CommandDispatcher<CommandSourceStack>,
+    commandRegistryAccess: CommandBuildContext? = null,
+    registrationEnvironment: Commands.CommandSelection? = null
 ) : AbstractCommandVisitor(configManager, rootNodeName, commandDispatcher, commandRegistryAccess, registrationEnvironment) {
 
-    override fun <V : Any, A : ArgumentType<*>> visit(parentNode: LiteralCommandNode<ServerCommandSource>?, commandControllableSetting: CommandControllable<V, A>) {
-        val currentParentNode: LiteralCommandNode<ServerCommandSource> = parentNode ?: this.configNode
+    override fun <V : Any, A : ArgumentType<*>> visit(parentNode: LiteralCommandNode<CommandSourceStack>?, commandControllableSetting: CommandControllable<V, A>) {
+        val currentParentNode: LiteralCommandNode<CommandSourceStack> = parentNode ?: this.configNode
         val settingName: String = commandControllableSetting.commandPath.asList.last()
-        val settingNode: LiteralCommandNode<ServerCommandSource> = CommandManager
+        val settingNode: LiteralCommandNode<CommandSourceStack> = Commands
             .literal(settingName)
-            .requires(Permissions.require("$rootNodeName.config.${commandControllableSetting.commandPath.string}", 4))
+            .requires(Permissions.require("$rootNodeName.config.${commandControllableSetting.commandPath.string}", PermissionLevel.OWNERS))
             .executes { ctx -> commandControllableSetting.onValueGetCallback(ctx, this.configManager) }
             .build()
 
-        val setterNode: ArgumentCommandNode<ServerCommandSource, out Any> = CommandManager
+        val setterNode: ArgumentCommandNode<CommandSourceStack, out Any> = Commands
             .argument(settingName, commandControllableSetting.argumentType)
-            .requires(Permissions.require("$rootNodeName.config.${commandControllableSetting.commandPath.string}", 4))
+            .requires(Permissions.require("$rootNodeName.config.${commandControllableSetting.commandPath.string}", PermissionLevel.OWNERS))
             .suggests { ctx, suggestionBuilder -> commandControllableSetting.getSuggestions(ctx, suggestionBuilder) }
             .executes { ctx -> commandControllableSetting.onValueSetCallback(ctx, this.configManager) }
             .build()

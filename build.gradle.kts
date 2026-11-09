@@ -2,9 +2,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("fabric-loom") version "1.14-SNAPSHOT"
+	id("net.fabricmc.fabric-loom") version "1.19-SNAPSHOT"
 	id("maven-publish")
-	id("org.jetbrains.kotlin.jvm") version "2.3.0"
+	id("org.jetbrains.kotlin.jvm") version "2.4.21"
 }
 
 version = property("mod_version").toString()
@@ -75,16 +75,15 @@ loom {
 
 dependencies {
 	minecraft("com.mojang:minecraft:${property("minecraft_version")}")
-	mappings("net.fabricmc:yarn:${property("yarn_mappings")}:v2")
-	modImplementation("net.fabricmc:fabric-loader:${property("loader_version")}")
+	implementation("net.fabricmc:fabric-loader:${property("loader_version")}")
 
-	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}")
-	modImplementation("net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin_version")}")
+	implementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}")
+	implementation("net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin_version")}")
 
 	include(implementation("io.github.arkosammy12:monkey-config:${property("monkey-config")}")!!)
 
 	// Fabric Permissions API
-	include(modImplementation("me.lucko:fabric-permissions-api:${property("fabric-permissions-api")}")!!)
+	include(implementation("me.lucko:fabric-permissions-api:${property("fabric-permissions-api")}")!!)
 
 	"testmodImplementation"(sourceSets.main.get().output)
 	"testmodImplementation"("org.junit.jupiter:junit-jupiter-api:5.8.2")
@@ -108,12 +107,12 @@ tasks.processResources {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-	options.release = 21
+	options.release = 25
 }
 
 tasks.withType<KotlinCompile>().configureEach {
 	compilerOptions {
-		jvmTarget = JvmTarget.JVM_21
+		jvmTarget = JvmTarget.JVM_25
 	}
 }
 
@@ -123,8 +122,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 tasks.withType<Jar> {

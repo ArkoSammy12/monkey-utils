@@ -9,7 +9,7 @@ import com.mojang.brigadier.context.CommandContext
 import io.github.arkosammy12.monkeyconfig.builders.NumberSettingBuilder
 import io.github.arkosammy12.monkeyconfig.settings.NumberSetting
 import io.github.arkosammy12.monkeyconfig.util.ElementPath
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
 import kotlin.math.max
 import kotlin.math.min
 
@@ -38,7 +38,7 @@ open class CommandNumberSetting<T : Number> (
     // and the value of the command argument should be retrieved with IntegerArgumentType.getInteger(), which returns an Int, which can then be safely casted to T,
     // which in this case, is Int.
     @Suppress("UNCHECKED_CAST")
-    override fun getArgumentValue(ctx: CommandContext<out ServerCommandSource>, argumentName: String): T =
+    override fun getArgumentValue(ctx: CommandContext<out CommandSourceStack>, argumentName: String): T =
         when (this.value.default) {
             is Byte, is Short, is Int -> IntegerArgumentType.getInteger(ctx, argumentName)
             is Long -> LongArgumentType.getLong(ctx, argumentName)
