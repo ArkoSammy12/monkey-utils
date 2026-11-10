@@ -1,13 +1,13 @@
 package io.github.arkosammy12.monkeyutilstest.testsettings
 
-import net.minecraft.util.StringIdentifiable
+import net.minecraft.util.StringRepresentable
 
-enum class EmotionEnum(val string: String) : StringIdentifiable {
+enum class EmotionEnum(val string: String) : StringRepresentable {
     HAPPY("HAPPY"),
     SAD("SAD"),
     ANGRY("ANGRY"),
     WORRIED("WORRIED");
 
-    override fun asString(): String? = this.string
+    override fun getSerializedName(): String = this.string
 
 }
