@@ -7,14 +7,14 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import io.github.arkosammy12.monkeyconfig.builders.EnumSettingBuilder
 import io.github.arkosammy12.monkeyconfig.settings.EnumSetting
 import io.github.arkosammy12.monkeyconfig.util.ElementPath
-import net.minecraft.command.CommandSource
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.util.StringIdentifiable
+import net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.util.StringRepresentable
 import java.util.concurrent.CompletableFuture
 
 open class CommandEnumSetting<E>(
     settingBuilder: EnumSettingBuilder<E>
-) : EnumSetting<E>(settingBuilder), CommandControllable<E, StringArgumentType> where E : Enum<E>, E : StringIdentifiable {
+) : EnumSetting<E>(settingBuilder), CommandControllable<E, StringArgumentType> where E : Enum<E>, E : StringRepresentable {
 
     override val argumentType: StringArgumentType
         get() = StringArgumentType.word()
@@ -23,20 +23,20 @@ open class CommandEnumSetting<E>(
         get() = this.path
 
     @Throws(IllegalArgumentException::class)
-    override fun getArgumentValue(ctx: CommandContext<out ServerCommandSource>, argumentName: String): E {
+    override fun getArgumentValue(ctx: CommandContext<out CommandSourceStack>, argumentName: String): E {
         val string: String = StringArgumentType.getString(ctx, argumentName)
         for (enumValue: E in this.value.default::class.java.enumConstants) {
-            if (enumValue.asString() == string) {
+            if (enumValue.getSerializedName() == string) {
                 return enumValue
             }
         }
         throw IllegalArgumentException("Enum constant of type \"${this.value.default::class.java.simpleName}\" not found for name \"$string\"")
     }
 
-    override fun getSuggestions(ctx: CommandContext<ServerCommandSource>, suggestionsBuilder: SuggestionsBuilder): CompletableFuture<Suggestions> {
-        return CommandSource.suggestMatching(
+    override fun getSuggestions(ctx: CommandContext<CommandSourceStack>, suggestionsBuilder: SuggestionsBuilder): CompletableFuture<Suggestions> {
+        return SharedSuggestionProvider.suggest(
             this.value.default::class.java.enumConstants
-                .map { value -> value.asString() }
+                .map { value -> value.getSerializedName() }
                 .toMutableList(),
             suggestionsBuilder
         )

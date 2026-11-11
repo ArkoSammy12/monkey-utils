@@ -5,7 +5,7 @@ import com.mojang.brigadier.context.CommandContext
 import io.github.arkosammy12.monkeyconfig.builders.BooleanSettingBuilder
 import io.github.arkosammy12.monkeyconfig.settings.BooleanSetting
 import io.github.arkosammy12.monkeyconfig.util.ElementPath
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
 
 open class CommandBooleanSetting(
     settingBuilder: BooleanSettingBuilder,
@@ -17,7 +17,7 @@ open class CommandBooleanSetting(
     override val commandPath: ElementPath
         get() = this.path
 
-    override fun getArgumentValue(ctx: CommandContext<out ServerCommandSource>, argumentName: String): Boolean {
+    override fun getArgumentValue(ctx: CommandContext<out CommandSourceStack>, argumentName: String): Boolean {
         return BoolArgumentType.getBool(ctx, argumentName)
     }
 
